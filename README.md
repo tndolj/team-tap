@@ -1,11 +1,10 @@
 # TeamTap v1.4
 
-TeamTap is a browser-based tool that helps split ten players into offensive and defensive teams. The interface supports both touch and tap modes, allowing participants to interact directly on screen or by placing tokens.
+TeamTap is a browser-based tool that helps split ten players into offensive and defensive teams using multi-touch.
 
 ## Features
 - Supports up to 10 players.
 - Automatically assigns Offense and Defense teams.
-- Toggle between touch and tap-token modes.
 - Simulate ten players for quick testing.
 - Clear and reset the arena with a single click.
 

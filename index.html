@@ -20,8 +20,6 @@
         <option value="8">8 Players</option>
         <option value="6">6 Players</option>
       </select>
-      <button id="btnMode">Mode: Touch</button>
-      <button id="btnAssign" class="ghost" style="display:none;">Assign Teams</button>
       <button id="btnClear">Clear</button>
       <div id="devControls" style="display:none;">
         <button id="btnSim" class="ghost">Simulate 10 (Test)</button>
@@ -31,8 +29,7 @@
 
   <div id="arena" class="arena">
     <div id="hint" class="hint">
-      <b>Touch Mode:</b> Place 10 fingers at the same time.<br/>
-      <b>Tap Tokens:</b> Tap 10 times to place tokens; tap a token to remove.
+      Place 10 fingers at the same time.
     </div>
 
     <div id="banner" class="banner" style="display:none;">
@@ -42,8 +39,8 @@
   </div>
 
   <div class="panel">
-    <div class="stat">Current Tokens/Fingers: <span id="count" class="counter">0</span> / <span id="maxCount">10</span></div>
-    <div class="stat" id="status">Mode: Touch — Waiting…</div>
+    <div class="stat">Current Fingers: <span id="count" class="counter">0</span> / <span id="maxCount">10</span></div>
+    <div class="stat" id="status">Waiting…</div>
   </div>
 </div>
 

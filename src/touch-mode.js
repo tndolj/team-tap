@@ -1,7 +1,6 @@
 import { getLocalXY, createFinger } from './utils.js';
 
 export function onTouchStart(app, ev) {
-  if (app.mode !== 'touch') return;
   ev.preventDefault();
   for (const t of ev.changedTouches) {
     if (app.touches.size >= app.maxPlayers) continue;
@@ -18,7 +17,6 @@ export function onTouchStart(app, ev) {
 }
 
 export function onTouchMove(app, ev) {
-  if (app.mode !== 'touch') return;
   ev.preventDefault();
   for (const t of ev.changedTouches) {
     const rec = app.touches.get(t.identifier);
@@ -30,7 +28,6 @@ export function onTouchMove(app, ev) {
 }
 
 export function onTouchEnd(app, ev) {
-  if (app.mode !== 'touch') return;
   ev.preventDefault();
   // Intentionally keep finger markers after touch release.
 }
