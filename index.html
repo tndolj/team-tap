@@ -117,7 +117,9 @@
       <button id="btnMode">Mode: Touch</button>
       <button id="btnAssign" class="ghost" style="display:none;">Assign Teams</button>
       <button id="btnClear">Clear</button>
-      <button id="btnSim" class="ghost">Simulate 10 (Test)</button>
+      <div id="devControls" style="display:none;">
+        <button id="btnSim" class="ghost">Simulate 10 (Test)</button>
+      </div>
     </div>
   </header>
 
@@ -154,9 +156,19 @@
   const statusEl= document.getElementById('status');
   const btnClear= document.getElementById('btnClear');
   const btnSim  = document.getElementById('btnSim');
+  const devControls = document.getElementById('devControls');
   const btnMode = document.getElementById('btnMode');
   const btnAssign = document.getElementById('btnAssign');
   const toast   = document.getElementById('toast');
+
+  const isDev = window.location.hostname === 'localhost' ||
+    new URLSearchParams(window.location.search).get('dev') === '1';
+  if(isDev){
+    devControls.style.display = 'block';
+    btnSim.style.display = 'inline-block';
+  } else {
+    btnSim.style.display = 'none';
+  }
 
   // Mode state
   let mode = 'touch'; // 'touch' | 'tap'
@@ -303,21 +315,23 @@
     updateCountUI();
   });
 
-  btnSim.addEventListener('click', ()=>{
-    // works for either mode: just place 10 tokens at random
-    btnClear.click();
-    const rect = arena.getBoundingClientRect();
-    const pad = 90;
-    for(let i=0;i<10;i++){
-      const x = Math.random()*(rect.width-pad*2)+pad;
-      const y = Math.random()*(rect.height-pad*2)+pad;
-      const rec = createFinger(x,y,i+1);
-      touches.set('sim'+i, { ...rec, role:null });
-    }
-    updateCountUI();
-    if(mode==='touch'){ assignTeamsFrom(Array.from(touches.values())); }
-    else { btnAssign.style.display='inline-block'; }
-  });
+  if(btnSim.style.display !== 'none'){
+    btnSim.addEventListener('click', ()=>{
+      // works for either mode: just place 10 tokens at random
+      btnClear.click();
+      const rect = arena.getBoundingClientRect();
+      const pad = 90;
+      for(let i=0;i<10;i++){
+        const x = Math.random()*(rect.width-pad*2)+pad;
+        const y = Math.random()*(rect.height-pad*2)+pad;
+        const rec = createFinger(x,y,i+1);
+        touches.set('sim'+i, { ...rec, role:null });
+      }
+      updateCountUI();
+      if(mode==='touch'){ assignTeamsFrom(Array.from(touches.values())); }
+      else { btnAssign.style.display='inline-block'; }
+    });
+  }
 
   btnMode.addEventListener('click', ()=>{
     // toggle mode
