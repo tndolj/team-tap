@@ -165,9 +165,21 @@
     new URLSearchParams(window.location.search).get('dev') === '1';
   if(isDev){
     devControls.style.display = 'block';
-    btnSim.style.display = 'inline-block';
-  } else {
-    btnSim.style.display = 'none';
+    btnSim.addEventListener('click', ()=>{
+      // works for either mode: just place 10 tokens at random
+      btnClear.click();
+      const rect = arena.getBoundingClientRect();
+      const pad = 90;
+      for(let i=0;i<10;i++){
+        const x = Math.random()*(rect.width-pad*2)+pad;
+        const y = Math.random()*(rect.height-pad*2)+pad;
+        const rec = createFinger(x,y,i+1);
+        touches.set('sim'+i, { ...rec, role:null });
+      }
+      updateCountUI();
+      if(mode==='touch'){ assignTeamsFrom(Array.from(touches.values())); }
+      else { btnAssign.style.display='inline-block'; }
+    });
   }
 
   // Mode state
@@ -315,23 +327,6 @@
     updateCountUI();
   });
 
-  if(btnSim.style.display !== 'none'){
-    btnSim.addEventListener('click', ()=>{
-      // works for either mode: just place 10 tokens at random
-      btnClear.click();
-      const rect = arena.getBoundingClientRect();
-      const pad = 90;
-      for(let i=0;i<10;i++){
-        const x = Math.random()*(rect.width-pad*2)+pad;
-        const y = Math.random()*(rect.height-pad*2)+pad;
-        const rec = createFinger(x,y,i+1);
-        touches.set('sim'+i, { ...rec, role:null });
-      }
-      updateCountUI();
-      if(mode==='touch'){ assignTeamsFrom(Array.from(touches.values())); }
-      else { btnAssign.style.display='inline-block'; }
-    });
-  }
 
   btnMode.addEventListener('click', ()=>{
     // toggle mode
