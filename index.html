@@ -185,9 +185,19 @@
   }
   function setBadge(rec, role){
     if(!rec?.badge) return;
-    if(role==='OFF'){ rec.badge.textContent='OFF'; rec.badge.className='badge off'; rec.badge.style.display='block'; }
-    else if(role==='DEF'){ rec.badge.textContent='DEF'; rec.badge.className='badge def'; rec.badge.style.display='block'; }
-    else { rec.badge.style.display='none'; }
+    if(role==='OFF'){
+      rec.badge.textContent='OFF';
+      rec.badge.className='badge off';
+      rec.badge.style.display='block';
+    } else if(role==='DEF'){
+      rec.badge.textContent='DEF';
+      rec.badge.className='badge def';
+      rec.badge.style.display='block';
+    } else {
+      rec.badge.textContent='';
+      rec.badge.className='badge';
+      rec.badge.style.display='none';
+    }
   }
 
   function updateCountUI(){
