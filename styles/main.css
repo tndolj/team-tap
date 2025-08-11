@@ -105,3 +105,21 @@
     }
     .badge.off{ background:var(--OFF); color:#201a00; box-shadow: var(--glow-off); }
     .badge.def{ background:var(--DEF); color:#001e12; box-shadow: var(--glow-def); }
+
+    #btnSettings{
+      margin-left:auto;
+      padding:8px 10px;
+      font-size:14px;
+      line-height:1;
+    }
+
+    .modal{
+      position:fixed; inset:0; background:rgba(0,0,0,.7);
+      display:none; align-items:center; justify-content:center;
+    }
+    .modal-content{
+      background:#0d0d18; border:2px solid var(--line); border-radius:10px;
+      padding:20px; display:flex; flex-direction:column; gap:10px; font-size:10px;
+    }
+    .modal-content label{display:flex;align-items:center;justify-content:space-between;gap:10px;}
+    .modal-actions{display:flex;gap:8px;justify-content:flex-end;margin-top:10px;}

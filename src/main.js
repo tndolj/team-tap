@@ -1,6 +1,12 @@
 import { onTouchStart, onTouchMove, onTouchEnd } from './touch-mode.js';
 import { showToast, shuffle, setBadge, createFinger } from './utils.js';
 
+// Apply saved colors before the app initializes
+const savedOFF = localStorage.getItem('colorOFF');
+const savedDEF = localStorage.getItem('colorDEF');
+if (savedOFF) document.documentElement.style.setProperty('--OFF', savedOFF);
+if (savedDEF) document.documentElement.style.setProperty('--DEF', savedDEF);
+
 export class TeamTap {
   constructor() {
     this.OFF_COL = getComputedStyle(document.documentElement).getPropertyValue('--OFF').trim() || '#f5b301';
@@ -142,3 +148,40 @@ export class TeamTap {
 
 const app = new TeamTap();
 app.init();
+
+const btnSettings = document.getElementById('btnSettings');
+const modal = document.getElementById('settingsModal');
+const offInput = document.getElementById('offColor');
+const defInput = document.getElementById('defColor');
+const btnSave = document.getElementById('btnSaveSettings');
+const btnCancel = document.getElementById('btnCancelSettings');
+
+btnSettings.addEventListener('click', () => {
+  offInput.value = app.OFF_COL;
+  defInput.value = app.DEF_COL;
+  modal.style.display = 'flex';
+});
+
+btnCancel.addEventListener('click', () => {
+  modal.style.display = 'none';
+});
+
+btnSave.addEventListener('click', () => {
+  const off = offInput.value;
+  const def = defInput.value;
+  document.documentElement.style.setProperty('--OFF', off);
+  document.documentElement.style.setProperty('--DEF', def);
+  app.OFF_COL = off;
+  app.DEF_COL = def;
+  app.touches.forEach(t => {
+    if (t.role === 'OFF') {
+      t.el.style.background = off;
+    } else if (t.role === 'DEF') {
+      t.el.style.background = def;
+    }
+    setBadge(t, t.role);
+  });
+  localStorage.setItem('colorOFF', off);
+  localStorage.setItem('colorDEF', def);
+  modal.style.display = 'none';
+});
