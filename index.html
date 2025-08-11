@@ -24,6 +24,7 @@
       <div id="devControls" style="display:none;">
         <button id="btnSim" class="ghost">Simulate 10 (Test)</button>
       </div>
+      <button id="btnSettings">⚙️</button>
     </div>
   </header>
 
@@ -41,6 +42,17 @@
   <div class="panel">
     <div class="stat">Current Fingers: <span id="count" class="counter">0</span> / <span id="maxCount">10</span></div>
     <div class="stat" id="status">Waiting…</div>
+  </div>
+</div>
+
+<div id="settingsModal" class="modal">
+  <div class="modal-content">
+    <label>Offense Color <input type="color" id="offColor"></label>
+    <label>Defense Color <input type="color" id="defColor"></label>
+    <div class="modal-actions">
+      <button id="btnSaveSettings">Save</button>
+      <button id="btnCancelSettings" class="ghost">Cancel</button>
+    </div>
   </div>
 </div>
 
