@@ -1,4 +1,4 @@
-# TeamTap v1.4
+# TeamTap v1.5
 
 TeamTap is a browser-based tool that helps split ten players into offensive and defensive teams using multi-touch.
 
