@@ -1,5 +1,4 @@
 import { onTouchStart, onTouchMove, onTouchEnd } from './touch-mode.js';
-import { onArenaClick } from './tap-mode.js';
 import { showToast, shuffle, setBadge, createFinger } from './utils.js';
 
 export class TeamTap {
@@ -17,14 +16,11 @@ export class TeamTap {
     this.btnClear = document.getElementById('btnClear');
     this.btnSim = document.getElementById('btnSim');
     this.devControls = document.getElementById('devControls');
-    this.btnMode = document.getElementById('btnMode');
-    this.btnAssign = document.getElementById('btnAssign');
     this.toast = document.getElementById('toast');
     this.selPlayers = document.getElementById('selPlayers');
     this.instructionsEl = document.getElementById('instructions');
     this.maxCountEl = document.getElementById('maxCount');
 
-    this.mode = 'touch';
     this.touches = new Map();
     this.splitDone = false;
     this.nextLabel = 1;
@@ -33,7 +29,7 @@ export class TeamTap {
 
   updateInstructions() {
     this.instructionsEl.innerHTML = `Have <b>${this.maxPlayers} players</b> place their fingers on the screen — the system will auto-assign <b style="color:var(--OFF)">Offense</b> / <b style="color:var(--DEF)">Defense</b>`;
-    this.hint.innerHTML = `<b>Touch Mode:</b> Place ${this.maxPlayers} fingers at the same time.<br/><b>Tap Tokens:</b> Tap ${this.maxPlayers} times to place tokens; tap a token to remove.`;
+    this.hint.innerHTML = `Place ${this.maxPlayers} fingers at the same time.`;
     this.maxCountEl.textContent = this.maxPlayers;
     this.btnSim.textContent = `Simulate ${this.maxPlayers} (Test)`;
   }
@@ -43,19 +39,13 @@ export class TeamTap {
     this.countEl.textContent = n;
     this.maxCountEl.textContent = this.maxPlayers;
     this.hint.style.display = n === 0 ? 'block' : 'none';
-    if (this.mode === 'touch') {
-      if (n < this.maxPlayers) {
-        this.statusEl.textContent = `Mode: Touch — Waiting for ${this.maxPlayers} fingers…`;
-        this.banner.style.display = 'none';
-      } else if (n === this.maxPlayers) {
-        this.statusEl.textContent = this.splitDone ? 'Teams assigned…' : `${this.maxPlayers} fingers — assigning teams…`;
-      } else {
-        this.statusEl.textContent = `Mode: Touch — More than ${this.maxPlayers} fingers, keep only ${this.maxPlayers}`;
-      }
+    if (n < this.maxPlayers) {
+      this.statusEl.textContent = `Waiting for ${this.maxPlayers} fingers…`;
+      this.banner.style.display = 'none';
+    } else if (n === this.maxPlayers) {
+      this.statusEl.textContent = this.splitDone ? 'Teams assigned…' : `${this.maxPlayers} fingers — assigning teams…`;
     } else {
-      this.statusEl.textContent = `Mode: Tap Tokens — Tap to add/remove (${n}/${this.maxPlayers})`;
-      this.btnAssign.style.display = (n === this.maxPlayers && !this.splitDone) ? 'inline-block' : 'none';
-      if (n < this.maxPlayers) this.banner.style.display = 'none';
+      this.statusEl.textContent = `More than ${this.maxPlayers} fingers, keep only ${this.maxPlayers}`;
     }
   }
 
@@ -110,11 +100,7 @@ export class TeamTap {
           this.touches.set('sim' + i, { ...rec, role: null });
         }
         this.updateCountUI();
-        if (this.mode === 'touch') {
-          this.assignTeamsFrom(Array.from(this.touches.values()));
-        } else {
-          this.btnAssign.style.display = 'inline-block';
-        }
+        this.assignTeamsFrom(Array.from(this.touches.values()));
       });
     }
 
@@ -124,37 +110,6 @@ export class TeamTap {
       this.nextLabel = 1;
       this.resetSplitVisuals();
       this.updateCountUI();
-    });
-
-    this.btnMode.addEventListener('click', () => {
-      if (this.mode === 'touch') {
-        this.mode = 'tap';
-        this.btnMode.textContent = 'Mode: Tap Tokens';
-        this.btnAssign.style.display = (this.touches.size === this.maxPlayers && !this.splitDone) ? 'inline-block' : 'none';
-        this.statusEl.textContent = `Mode: Tap Tokens — Tap to add/remove (0/${this.maxPlayers})`;
-        showToast(this.toast, 'Tap anywhere to add tokens. Tap a token to remove.');
-      } else {
-        this.mode = 'touch';
-        this.btnMode.textContent = 'Mode: Touch';
-        this.btnAssign.style.display = 'none';
-        this.statusEl.textContent = 'Mode: Touch — Waiting…';
-        showToast(this.toast, `Place up to ${this.maxPlayers} fingers at once.`);
-      }
-      this.touches.forEach(t => t.el.remove());
-      this.touches.clear();
-      this.nextLabel = 1;
-      this.resetSplitVisuals();
-      this.updateCountUI();
-    });
-
-    this.btnAssign.addEventListener('click', () => {
-      if (this.mode !== 'tap') return;
-      if (this.touches.size !== this.maxPlayers) {
-        showToast(this.toast, `Need exactly ${this.maxPlayers} tokens to assign.`);
-        return;
-      }
-      if (this.splitDone) return;
-      this.assignTeamsFrom(Array.from(this.touches.values()));
     });
 
     this.selPlayers.addEventListener('change', () => {
@@ -167,8 +122,6 @@ export class TeamTap {
     this.arena.addEventListener('touchmove', ev => onTouchMove(this, ev), { passive: false });
     this.arena.addEventListener('touchend', ev => onTouchEnd(this, ev), { passive: false });
     this.arena.addEventListener('touchcancel', ev => onTouchEnd(this, ev), { passive: false });
-
-    this.arena.addEventListener('click', ev => onArenaClick(this, ev));
 
     window.addEventListener('resize', () => {
       const rect = this.arena.getBoundingClientRect();
