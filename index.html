@@ -267,12 +267,8 @@
   function onTouchEnd(ev){
     if(mode!=='touch') return;
     ev.preventDefault();
-    let changed=false;
-    for(const t of ev.changedTouches){
-      const rec = touches.get(t.identifier);
-      if(rec){ rec.el.remove(); touches.delete(t.identifier); changed=true; }
-    }
-    if(changed){ resetSplitVisuals(); updateCountUI(); }
+    // Intentionally keep finger markers after touch release.
+    // They remain on screen until the user presses the Clear button.
   }
 
   // ==== Tap Tokens Mode ====
